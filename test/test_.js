@@ -9,7 +9,7 @@ chai.use(chaiAsPromised)
 
 const UCC = require("../index.js")
 
-let currencyConverter = new UCC({from:"USD", to:"BDT", amount:100, isDecimalComma:true})
+let currencyConverter = new UCC({from:"AUD", to:"BDT", amount:4000000, isDecimalComma:true})
 
 // currencyConverter.convert().then((response) => {
 //     console.log(response) //or do something else
@@ -19,7 +19,7 @@ let currencyConverter = new UCC({from:"USD", to:"BDT", amount:100, isDecimalComm
 // currencyConverter.rates().then((response) => {
 //     console.log(response) //or do something else
 // })
-currencyConverter.convert(1).then((response) => {
+currencyConverter.convert(4000000).then((response) => {
     console.log(response) //or do something else
 })
 

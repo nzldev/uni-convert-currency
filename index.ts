@@ -1,7 +1,7 @@
-const cheerio = require("cheerio")
-const got = require("got")
+import cheerio from "cheerio";
+import got from "got";
 
-const toEn = n => n.replace(/[০-৯]/g, d => "০১২৩৪৫৬৭৮৯".indexOf(d));
+const toEn = (n: any) => n.replace(/[০-৯]/g, (d: any) => "০১২৩৪৫৬৭৮৯".indexOf(d));
 // FIXME: round upto 2 decimal places
 // TODO: Add doc for other functions
 class CurrencyConverter {
@@ -38,7 +38,6 @@ class CurrencyConverter {
         "CLP": "Chilean Peso",
         "CLF": "Chilean Unit of Account (UF)",
         "CNY": "Chinese Yuan",
-        "CNY": "Chinese Yuan (offshore)",
         "COP": "Colombian Peso",
         "CF": "Comorian Franc",
         "CDF": "Congolese Franc",
@@ -156,8 +155,13 @@ class CurrencyConverter {
         "PEN": "Peruvian Sol"
     }
     currencyCode = ["AFN", "ALL", "DZD", "AOA", "ARS", "AMD", "AWG", "AUD", "AZN", "BSD", "BHD", "BBD", "BDT", "BYR", "BZD", "BMD", "BTN", "XBT", "BOB", "BAM", "BWP", "BRL", "BND", "BGN", "BIF", "XPF", "KHR ", "CAD", "CVE", "KYD", "FCFA", "CLP", "CLF", "CNY", "CNY", "COP", "CF", "CDF", "CRC", "HRK", "CUC", "CZK", "DKK", "DJF", "DOP", "XCD", "EGP", "ETB", "FJD", "GMD", "GBP", "GEL", "GHS", "GTQ", " GNF", "GYD", "HTG", "HNL", "HKD", "HUF", "ISK", "INR", "IDR", "IRR", "IQD", "ILS", "JMD", "JPY", "JOD", "KZT", "KES", "KWD", "KGS", "LAK", "LBP", "LSL", "LRD", "LYD", "MOP", "MKD", "MGA" , "MWK", "MYR", "MVR", "MRO", "MUR", "MXN", "MDL", "MAD", "MZN", "MMK", "NAD", "NPR", "ANG", "NZD", "NIO", "NGN", "NOK", "OMR", "PKR", "PAB", "PGK", "PYG ", "PHP", "PLN", "QAR", " RON", "RUB", "RWF", "SVC", "SAR", "RSD", "SCR", "SLL", "SGD", "SBD", "SOS", "ZAR", "KRW", "VES", "LKR", "SDG", "SRD", "SZL", "SEK", "CHF", "TJS", "TZS", "THB", "TOP", "TTD", "TND", "TRY" , "TMT", "UGX", "UAH", "AED", "USD", "UYU", "UZS", "VND", "XOF", "YER", "ZMW", "ETH", "EUR", "LTC", "TWD", "PEN"]
+    currencyFrom: string;
+    currencyTo: string;
+    currencyAmount: number;
+    convertedValue: number;
+    isDecimalComma: boolean;
 
-    constructor(params) {
+    constructor(params: { [x: string]: any; }) {
         this.currencyFrom = ""
         this.currencyTo = ""
         this.currencyAmount = 1
@@ -179,7 +183,7 @@ class CurrencyConverter {
         }
 
     }
-    from (currencyFrom) {
+    from (currencyFrom: string) {
         if(typeof currencyFrom !== "string")
             throw new TypeError("currency code should be a string")
             
@@ -189,7 +193,7 @@ class CurrencyConverter {
         this.currencyFrom = currencyFrom.toUpperCase()
         return this
     }
-    to (currencyTo) {
+    to (currencyTo: string) {
         if(typeof currencyTo !== "string")
             throw new TypeError("currency code should be a string")
 
@@ -199,7 +203,7 @@ class CurrencyConverter {
         this.currencyTo = currencyTo
         return this
     }
-    amount (currencyAmount){
+    amount (currencyAmount: number){
         if(typeof currencyAmount !== "number")
             throw new TypeError("amount should be a number")
 
@@ -210,7 +214,7 @@ class CurrencyConverter {
         return this
     }
 
-    setDecimalComma (isDecimalComma){
+    setDecimalComma (isDecimalComma: any){
         if(typeof isDecimalComma !== "boolean")
             throw new TypeError("isDecimalComma should be a boolean")
         
@@ -236,25 +240,25 @@ class CurrencyConverter {
                 .then(($) => {return $(".iBp4i").text().split(" ")[0]})
                 // .then(($) => {return $(".DFlfde").text().split(" ")[0]})
                 .then((rates) => {
-                    rates = toEn(`${rates}`);  
-                                      
+                    rates = toEn(`${rates}`);   
+                                   
                     if(this.isDecimalComma){
                         // if(rates.includes("."))
                         //     rates = rates.replaceAll(".", "")
                         if(rates.includes(","))
                             // rates = rates.replaceAll(",", ".")
-                            rates = rates.replace(/,/g, '');
-                            // console.log("===>",rates); 
-                    }else{
+                            rates = rates.replace(",", "")
+                    }
+                    else{
                         if(rates.includes(","))
-                            rates = rates.replace(/,/g, '');
+                            rates = rates.replace(",", "")
                     }
 
                     return parseFloat(rates)
             })
     }
 
-    convert(currencyAmount){
+    convert(currencyAmount: number){
         if(currencyAmount !== undefined){
             this.amount(currencyAmount)
         }
@@ -279,7 +283,7 @@ class CurrencyConverter {
         })
     }
 
-    currencyName(currencyCode_){
+    currencyName(currencyCode_: string){
         if(typeof currencyCode_ != "string")
             throw new TypeError("currency code should be a string")
         
